@@ -15,4 +15,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if err == nil && req.Result.Intent.DisplayName == "crm-status" {
 		getCrmStatus(w)
 	}
+
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write([]byte("Could not determine action."))
 }
