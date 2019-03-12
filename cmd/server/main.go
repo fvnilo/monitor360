@@ -1,24 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	monitor360HTTP "github.com/nylo-andry/monitor360/http"
 )
 
 func main() {
-	env := os.Getenv("ENV")
-	allowedHost := os.Getenv("ALLOWED_HOST")
-	if allowedHost == "" && env == "production" {
-		log.Fatal("No ALLOWED_HOST provided")
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("No PORT provided")
 	}
 
-	log.Printf("ENV is %v", allowedHost)
+	log.Printf("Starting server on port %v", port)
 
-	if env == "production" {
-		monitor360HTTP.StartProductionServer(allowedHost)
-	} else {
-		monitor360HTTP.StartDevServer()
-	}
+	http.HandleFunc("/", monitor360HTTP.MainHandler)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 }
